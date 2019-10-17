@@ -7,7 +7,8 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
 	@Override
 	public void hash(HashRequest req, StreamObserver<HashResponse> responseObserver) {
 
-		int id = 5;
-		HashResponse response = HashResponse.newBuilder().setUserId(id).build();
+		HashResponse response = HashResponse.newBuilder().setUserId(req.getUserId()).setHashedPassword(req.getPassword()).build();
+		responseObserver.onNext(response);
+        responseObserver.onCompleted();
 	}
 }
