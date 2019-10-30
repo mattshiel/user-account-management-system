@@ -10,7 +10,7 @@ public class PasswordServer {
 	
 	private Server grpcServer;
     private static final Logger logger = Logger.getLogger(PasswordServer.class.getName());
-    private static final int PORT = 50550;
+    private static final int PORT = 50552;
     
     public static void main(String[] args) throws IOException, InterruptedException {
         final PasswordServer passwordServer = new PasswordServer();

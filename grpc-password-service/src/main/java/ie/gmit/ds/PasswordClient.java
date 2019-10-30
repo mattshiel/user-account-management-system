@@ -26,7 +26,7 @@ public class PasswordClient {
 	}
 
 	public static void main(String[] args) throws Exception {
-		PasswordClient client = new PasswordClient("localhost", 50550);
+		PasswordClient client = new PasswordClient("localhost", 50552);
 		try {
 			client.greet(12, "password");
 		} finally {
