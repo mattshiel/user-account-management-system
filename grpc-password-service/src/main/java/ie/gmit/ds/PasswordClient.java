@@ -8,6 +8,10 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
+/*  
+	Adapted from https://github.com/john-french/distributed-systems-labs/tree/master/grpc-async-inventory
+*/
+
 public class PasswordClient {
 
 	private static final Logger logger = Logger.getLogger(PasswordClient.class.getName());
