@@ -12,13 +12,13 @@ public class PasswordClient {
 
 	private static final Logger logger = Logger.getLogger(PasswordClient.class.getName());
 	private final ManagedChannel channel;
-	private final PasswordServiceGrpc.PasswordServiceStub asyncInventoryService;
-	private final PasswordServiceGrpc.PasswordServiceBlockingStub syncInventoryService;
+	private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
+	private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService;
 
 	public PasswordClient(String host, int port) {
 		this.channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
-		syncInventoryService = PasswordServiceGrpc.newBlockingStub(channel);
-		asyncInventoryService = PasswordServiceGrpc.newStub(channel);
+		syncPasswordService = PasswordServiceGrpc.newBlockingStub(channel);
+		asyncPasswordService = PasswordServiceGrpc.newStub(channel);
 	}
 
 	public void shutdown() throws InterruptedException {
@@ -28,21 +28,21 @@ public class PasswordClient {
 	public static void main(String[] args) throws Exception {
 		PasswordClient client = new PasswordClient("localhost", 50552);
 		try {
-			client.greet(12, "password");
+			client.hash(12, "password");
 		} finally {
 			// TODO Auto-generated catch block
 			client.shutdown();
 		}
 	}
 
-	public void greet(int userId, String password) throws IOException {
+	public void hash(int userId, String password) throws IOException {
 		HashRequest.Builder builder = HashRequest.newBuilder();
 		builder.setUserId(userId).setPassword(password);
 		HashRequest request = builder.build();
 		
 		HashResponse response;
 		try {
-			response = syncInventoryService.hash(request);
+			response = syncPasswordService.hash(request);
 		} catch (StatusRuntimeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
