@@ -8,7 +8,7 @@
 	<!-- Feel free to delete the comment at the end of these lines. It is just 
 		for safely updating the version in our release process. -->
 	<version>0.1.0</version><!-- CURRENT_GRPC_VERSION -->
-	<name>examples</name>
+	<name>password-service</name>
 	<url>https://github.com/mattshiel/user-account-management-system</url>
 
 	<properties>
@@ -108,7 +108,7 @@
 				</executions>
 			</plugin>
 
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<executions>
@@ -128,7 +128,6 @@
 					</execution>
 				</executions>
 			</plugin>
- -->
 		</plugins>
 
 	</build>
