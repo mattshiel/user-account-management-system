@@ -7,18 +7,17 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 public class PasswordServer {
-	
-	private Server grpcServer;
-    private static final Logger logger = Logger.getLogger(PasswordServer.class.getName());
-    private static final int PORT = 50552;
-    
-    public static void main(String[] args) throws IOException, InterruptedException {
-        final PasswordServer passwordServer = new PasswordServer();
-        passwordServer.start();
-        passwordServer.blockUntilShutdown();
-    }
 
-    
+	private Server grpcServer;
+	private static final Logger logger = Logger.getLogger(PasswordServer.class.getName());
+	private static final int PORT = 50558;
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+		final PasswordServer passwordServer = new PasswordServer();
+		passwordServer.start();
+		passwordServer.blockUntilShutdown();
+	}
+
 	private void start() throws IOException {
 		grpcServer = ServerBuilder.forPort(PORT).addService(new PasswordServiceImpl()).build().start();
 		logger.info("Server started, listening on " + PORT);

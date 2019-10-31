@@ -1,59 +1,151 @@
 package ie.gmit.ds;
 
-import java.io.IOException;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.google.protobuf.ByteString;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
 /*  
-	Adapted from https://github.com/john-french/distributed-systems-labs/tree/master/grpc-async-inventory
+ * Adapted basic client setup
+ * Adapted from https://github.com/john-french/distributed-systems-labs/tree/master/grpc-async-inventory
 */
 
 public class PasswordClient {
 
-	private static final Logger logger = Logger.getLogger(PasswordClient.class.getName());
+	// private member constants
+	private static final Logger LOGGER = Logger.getLogger(PasswordClient.class.getName());
+	private static final String LINESEPARATOR = System.lineSeparator();
 	private final ManagedChannel channel;
-	private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
-	private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService;
+	private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService; // Synchronous service for hashing
+	private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService; // Asynchronous service for validation
 
-	public PasswordClient(String host, int port) {
-		this.channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
-		syncPasswordService = PasswordServiceGrpc.newBlockingStub(channel);
-		asyncPasswordService = PasswordServiceGrpc.newStub(channel);
-	}
 
-	public void shutdown() throws InterruptedException {
-		channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-	}
+	// Scanner
+	private Scanner sc = new Scanner(System.in);
+
+	// private member fields
+	private String password;
+	private ByteString hashedPassword;
+	private ByteString salt;
+	private int userId;
 
 	public static void main(String[] args) throws Exception {
-		PasswordClient client = new PasswordClient("localhost", 50552);
+		PasswordClient client = new PasswordClient("localhost", 50558);
 		try {
-			client.hash(12, "password");
+			// Build the HashRequest
+			HashRequest req = client.buildHashRequest();
+
+			// Send the HashRequest
+			client.sendHashRequest(req);
+
+			// Log to test client to server is working
+			LOGGER.info(LINESEPARATOR + "User ID: " + client.getUserId() + LINESEPARATOR + "Password: "
+					+ client.getPassword() + LINESEPARATOR + "Hashed Password: " + client.getHashedPassword()
+					+ LINESEPARATOR + "Salt: " + client.getSalt());
+
 		} finally {
-			// TODO Auto-generated catch block
+			// Terminate client
 			client.shutdown();
 		}
 	}
 
-	public void hash(int userId, String password) throws IOException {
-		HashRequest.Builder builder = HashRequest.newBuilder();
-		builder.setUserId(userId).setPassword(password);
-		HashRequest request = builder.build();
+	public PasswordClient(String host, int port) {
+		this.channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
+		// Create stubs
+		syncPasswordService = PasswordServiceGrpc.newBlockingStub(channel);
+		asyncPasswordService = PasswordServiceGrpc.newStub(channel);
+	}
+
+
+	public void shutdown() throws InterruptedException {
+		// Terminate client channel
+		channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+	}
+
+	public void getUserInput() {
+		LOGGER.info("\nRequesting user input...");
+
+		System.out.println("Enter ID:");
+		userId = sc.nextInt();
+		System.out.println("Enter Password:");
+		password = sc.next();
+
+		LOGGER.info("\nUser input received." + LINESEPARATOR);
+	}
+
+	public HashRequest buildHashRequest() {
+		getUserInput();
+
+		LOGGER.info("\nBuilding Hash Request...");
 		
-		HashResponse response;
+		// Build HashRequest
+		HashRequest hashRequest = HashRequest.newBuilder().setUserId(userId).setPassword(password).build();
+		
+		LOGGER.info("\nHash Request built" + LINESEPARATOR);
+
+		return hashRequest;
+	}
+
+	public void sendHashRequest(HashRequest req) {
+
+		HashResponse hashResponse;
+
 		try {
-			response = syncPasswordService.hash(request);
+			LOGGER.info("\nSending Hash Request...");
+
+			// Build HashResponse
+			hashResponse = syncPasswordService.hash(req);
+
+			LOGGER.info("\nHash Response received." + LINESEPARATOR);
+
+			// Store the password hash and the salt
+			hashedPassword = hashResponse.getHashedPassword();
+			salt = hashResponse.getSalt();
 		} catch (StatusRuntimeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
 			return;
 		}
-		
-		logger.info("Greetings " + response.getUserId() + " Your Password is " + response.getHashedPassword());
+	}
+
+	/*
+	 * Getters and Setters
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public ByteString getHashedPassword() {
+		return hashedPassword;
+	}
+
+	public void setHashedPassword(ByteString hashedPassword) {
+		this.hashedPassword = hashedPassword;
+	}
+
+	public ByteString getSalt() {
+		return salt;
+	}
+
+	public void setSalt(ByteString salt) {
+		this.salt = salt;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 }
