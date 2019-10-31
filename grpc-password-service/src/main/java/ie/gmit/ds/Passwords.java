@@ -33,9 +33,13 @@ public class Passwords {
      * Returns a random salt to be used to hash a password.
      *
      * @return a 16 bytes random salt
+     * 
+     * As pointed out by javamex.com at https://www.javamex.com/tutorials/cryptography/pbe_salt.shtml
+     * "SecureRandom, which is based internally on the 160-bit SHA-1 hash function, can only generate 2^160 possible sequences of any length. 
+     * So there is absolutely no point in using more than 160 bits of salt (= 20 bytes) with this generator."
      */
     public static byte[] getNextSalt() {
-        byte[] salt = new byte[32];
+        byte[] salt = new byte[20];
         RANDOM.nextBytes(salt);
         return salt;
     }
