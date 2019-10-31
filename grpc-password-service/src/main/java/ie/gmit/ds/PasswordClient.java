@@ -24,7 +24,7 @@ public class PasswordClient {
 	private static final Logger LOGGER = Logger.getLogger(PasswordClient.class.getName());
 	private static final String LINESEPARATOR = System.lineSeparator();
 	private static final String HOST = "localhost";
-	private static final int PORT = 50563;
+	private static final int PORT = 50568;
 	private final ManagedChannel channel;
 	private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService; // Synchronous service for
 																						// hashing
@@ -42,15 +42,23 @@ public class PasswordClient {
 	public static void main(String[] args) throws Exception {
 		PasswordClient client = new PasswordClient(HOST, PORT);
 		try {
+			LOGGER.info("\nRequesting user input for hashing...");
+			
 			// Build a HashRequest
 			HashRequest req = client.buildHashRequest();
+			
+			LOGGER.info(LINESEPARATOR + "User input received." + LINESEPARATOR);
 
 			// Send the HashRequest
 			client.sendHashRequest(req);
 			
+			LOGGER.info(LINESEPARATOR + "Requesting user input for validation...");
+			
 			// Send a ValidationRequest
             client.sendValidationRequest();
-            			
+            
+			LOGGER.info(LINESEPARATOR + "User input received.");
+
 			// Log to test client to server is working
 			LOGGER.info(LINESEPARATOR + "User ID: " + client.getUserId() + LINESEPARATOR + "Password: "
 					+ client.getPassword() + LINESEPARATOR + "Hashed Password: " + client.getHashedPassword()
@@ -76,14 +84,10 @@ public class PasswordClient {
 	}
 
 	public void getUserInput() {
-		LOGGER.info("\nRequesting user input...");
-
 		System.out.println("Enter ID:");
 		userId = sc.nextInt();
 		System.out.println("Enter Password:");
 		password = sc.next();
-
-		LOGGER.info("\nUser input received." + LINESEPARATOR);
 	}
 
 	public HashRequest buildHashRequest() {
@@ -109,7 +113,7 @@ public class PasswordClient {
 			// Build HashResponse
 			hashResponse = syncPasswordService.hash(req);
 
-			LOGGER.info("\nHash Response received." + LINESEPARATOR);
+			LOGGER.info("\nPassword hashed successfully! HashResponse received." + LINESEPARATOR);
 
 			// Store the password hash and the salt
 			setHashedPassword(hashResponse.getHashedPassword());
@@ -121,12 +125,13 @@ public class PasswordClient {
 	}
 
 	public void sendValidationRequest() {
+		// Create stream observer to watch for validation confirmation
 		StreamObserver<BoolValue> responseObserver = new StreamObserver<BoolValue>() {
 			
 			@Override
 			public void onNext(BoolValue value) {
 				if (value.getValue()) {
-					System.out.println("Login Successful");
+					System.out.println("Login Successful! Password Validated!");
 				} else {
 					System.out.println("Username or Password is incorrect");
 				}

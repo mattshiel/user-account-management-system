@@ -10,7 +10,7 @@ public class PasswordServer {
 
 	private Server grpcServer;
 	private static final Logger logger = Logger.getLogger(PasswordServer.class.getName());
-	private static final int PORT = 50563;
+	private static final int PORT = 50568;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		final PasswordServer passwordServer = new PasswordServer();
@@ -18,12 +18,14 @@ public class PasswordServer {
 		passwordServer.blockUntilShutdown();
 	}
 
+	// Start the server
 	private void start() throws IOException {
 		grpcServer = ServerBuilder.forPort(PORT).addService(new PasswordServiceImpl()).build().start();
 		logger.info("Server started, listening on " + PORT);
 
 	}
 
+	// Stop the server
 	private void stop() {
 		if (grpcServer != null) {
 			grpcServer.shutdown();
