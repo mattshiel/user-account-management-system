@@ -61,7 +61,7 @@ cd target
 ```bash 
 java -jar password-service-0.1.0-shaded
 ``` 
-## Test with client in a seperate terminal
+## Test with client in a separate terminal
 ```bash 
 java -cp password-service-0.1.0-shaded ie.gmit.ds.PasswordClient
 ``` 
@@ -77,7 +77,7 @@ cd mylocation
 ```bash 
 java -jar password-service-0.1.0-shaded
 ``` 
-### Test with client in a seperate terminal
+### Test with client in a separate terminal
 ```bash 
 java -cp password-service-0.1.0-shaded ie.gmit.ds.PasswordClient
 ``` 
