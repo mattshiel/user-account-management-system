@@ -121,7 +121,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>com.ie.gmit.ds.PasswordServer</mainClass>
+									<mainClass>ie.gmit.ds.PasswordServer</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>

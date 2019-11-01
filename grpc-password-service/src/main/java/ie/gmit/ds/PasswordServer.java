@@ -1,3 +1,10 @@
+/*
+ * Author: Matthew Shiel
+ * Student ID: G00338622
+ * Module: Distributed Systems
+ * Lecturer: Dr. John French
+ */
+
 package ie.gmit.ds;
 
 import java.io.IOException;
@@ -10,9 +17,10 @@ public class PasswordServer {
 
 	private Server grpcServer;
 	private static final Logger logger = Logger.getLogger(PasswordServer.class.getName());
-	private static final int PORT = 50568;
+	private static final int PORT = 50550;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
+		// Create server instance
 		final PasswordServer passwordServer = new PasswordServer();
 		passwordServer.start();
 		passwordServer.blockUntilShutdown();

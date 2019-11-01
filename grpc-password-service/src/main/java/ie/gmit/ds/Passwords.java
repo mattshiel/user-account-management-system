@@ -1,3 +1,10 @@
+/*
+ * Author: Matthew Shiel
+ * Student ID: G00338622
+ * Module: Distributed Systems
+ * Lecturer: Dr. John French
+ */
+
 package ie.gmit.ds;
 
 import javax.crypto.SecretKeyFactory;
