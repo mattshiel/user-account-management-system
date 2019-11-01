@@ -90,3 +90,4 @@ java -cp password-service-0.1.0-shaded ie.gmit.ds.PasswordClient
  
  ### Additional Information
  * Github Issues was used to track and record milestones and progress on the project - see issues for more details :)
+ * Part 2 will implement the RESTful user client
