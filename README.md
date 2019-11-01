@@ -82,8 +82,11 @@ java -jar password-service-0.1.0-shaded
 java -cp password-service-0.1.0-shaded ie.gmit.ds.PasswordClient
 ``` 
 
-## References
+### References
 
  - https://crackstation.net/hashing-security.htm
  - https://www.javamex.com/tutorials/cryptography/pbe_salt.shtml
  - https://github.com/john-french/distributed-systems-labs
+ 
+ ### Additional Information
+ * Github Issues was used to track and record milestones and progress on the project - see issues for more details :)
