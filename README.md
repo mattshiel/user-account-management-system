@@ -67,7 +67,7 @@ java -cp password-service-0.1.0-shaded ie.gmit.ds.PasswordClient
 ``` 
 
 ## Running the program with an executable jar
-[Mavne](https://maven.apache.org/) must be installed to build the executable jar. Follow official guidelines here. 
+Running the program if you already have the jar.
 
 ### Navigate to the location containing the jar 
 ```bash 
