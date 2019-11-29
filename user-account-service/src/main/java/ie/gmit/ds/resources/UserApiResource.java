@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import ie.gmit.ds.api.User;
+import ie.gmit.ds.client.UserClient;
 import ie.gmit.ds.database.UserDB;
 
 /*
@@ -28,11 +29,18 @@ import ie.gmit.ds.database.UserDB;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserApiResource {
 
-	private final Validator validator; // Validation
+	private final Validator validator;
+	private UserClient userClient;
+	
+	// CLIENT HOST AND PORT LOCATION
+//	 private final String HOST = "localhost";
+//	 private final int PORT = 50551;
 
 	// Default constructor used to initialize validator
 	public UserApiResource(Validator validator) {
 		this.validator = validator;
+		// Client launch would go here
+		//this.userClient = new UserClient(HOST, PORT);
 	}
 
 	// Retrieve a user from the database
@@ -52,7 +60,6 @@ public class UserApiResource {
 	public Response create(User user) throws URISyntaxException {
 		Set<ConstraintViolation<User>> violations = validator.validate(user);
 		User u = UserDB.get(user.getUserId());
-		// Validation check
 		if (violations.size() > 0) {
 			ArrayList<String> validationMessages = new ArrayList<>();
 			for (ConstraintViolation<User> violation : violations) {
@@ -73,7 +80,6 @@ public class UserApiResource {
 	@PUT
 	@Path("/{userId}")
 	public Response updateById(@PathParam("userId") int id, User user) {
-		// Validation
 		Set<ConstraintViolation<User>> violations = validator.validate(user);
 		User u = UserDB.get(user.getUserId());
 		if (violations.size() > 0) {

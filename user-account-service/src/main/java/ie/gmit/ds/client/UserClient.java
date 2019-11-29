@@ -36,7 +36,7 @@ public class UserClient {
 	private static final String LINESEPARATOR = System.lineSeparator();
 	
 	private static final String HOST = "localhost";
-	private static final int PORT = 50550;
+	private static final int PORT = 50552;
 	
 	private final ManagedChannel channel;
 	private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService; // Synchronous service for hashing																				
@@ -48,37 +48,6 @@ public class UserClient {
 	private ByteString salt;
 	private int userId;
 	private Scanner sc = new Scanner(System.in);
-
-	public static void main(String[] args) throws Exception {
-		UserClient client = new UserClient(HOST, PORT);
-		try {
-			LOGGER.info("\nRequesting user input for hashing...");
-
-			// Build a HashRequest
-			HashRequest req = client.buildHashRequest();
-
-			LOGGER.info(LINESEPARATOR + "User input received." + LINESEPARATOR);
-
-			// Send the HashRequest
-			client.sendHashRequest(req);
-
-			LOGGER.info(LINESEPARATOR + "Requesting user input for validation...");
-
-			// Send a ValidationRequest
-			client.sendValidationRequest();
-
-			LOGGER.info(LINESEPARATOR + "User input received.");
-
-			// Log to test client to server is working
-			LOGGER.info(LINESEPARATOR + "User ID: " + client.getUserId() + LINESEPARATOR + "Password: "
-					+ client.getPassword() + LINESEPARATOR + "Hashed Password: " + client.getHashedPassword()
-					+ LINESEPARATOR + "Salt: " + client.getSalt());
-
-		} finally {
-			// Keep process alive to receive async response
-			Thread.currentThread().join();
-		}
-	}
 
 	public UserClient(String host, int port) {
 		// Create channel with no SSL for testing purposes
