@@ -17,18 +17,22 @@ public class UserDB {
     }
      
     public static List<User> getUsers(){
+    	// An ArrayList will return as a JSON array if displayed
         return new ArrayList<User>(users.values());
     }
      
-    public static User getUser(Integer id){
-        return users.get(id);
+    // Return user
+    public static User get(int userID){
+        return users.get(userID);
     }
-     
-    public static void updateUsers(Integer id, User user){
+    
+    // Update or create a new user
+    public static void update(int id, User user){
         users.put(id, user);
     }
      
-    public static void removeUser(Integer id){
-        users.remove(id);
+    // Delete user
+    public static void remove(int userID){
+        users.remove(userID);
     }
 }
