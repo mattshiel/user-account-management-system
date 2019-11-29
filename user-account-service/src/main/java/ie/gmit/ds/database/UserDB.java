@@ -22,17 +22,17 @@ public class UserDB {
     }
      
     // Return user
-    public static User getUser(int userID){
+    public static User get(int userID){
         return users.get(userID);
     }
     
     // Update or create a new user
-    public static void updateUser(int id, User user){
+    public static void update(int id, User user){
         users.put(id, user);
     }
      
     // Delete user
-    public static void removeUser(int userID){
+    public static void remove(int userID){
         users.remove(userID);
     }
 }

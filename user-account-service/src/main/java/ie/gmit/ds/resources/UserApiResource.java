@@ -27,70 +27,83 @@ import ie.gmit.ds.database.UserDB;
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserApiResource {
-	
-    private final Validator validator; // Validation
-	
+
+	private final Validator validator; // Validation
+
 	// Default constructor used to initialize validator
 	public UserApiResource(Validator validator) {
 		this.validator = validator;
 	}
-	
-	 // Create a user and add it to the database
-    @POST
-    public Response createUser(User user) throws URISyntaxException {
-        Set<ConstraintViolation<User>> violations = validator.validate(user); // Validation
-        User u = UserDB.getUser(user.getUserId()); // Used for validation
-        // Validation check => User exists
-        if (violations.size() > 0) {
-            ArrayList<String> validationMessages = new ArrayList<>();
-            for (ConstraintViolation<User> violation : violations) {
-                validationMessages.add(violation.getPropertyPath().toString());
-            }
-            return Response.status(Response.Status.BAD_REQUEST).entity(validationMessages).build();
-        }
-        // If user doesn't exist => Create new user
-        if (u == null) {
-            UserDB.updateUser(user.getUserId(), user);
-            return Response.status(Status.OK).entity("User Created!").build();
-        } else {
-            return Response.status(Status.NOT_FOUND).entity("User Already Exists. Please try again.").build();
-        }
-    }
 
-    // Update user
-    @PUT
-    @Path("/{userId}")
-    public Response updateUserById(@PathParam("userId") int id, User user) {
-        // Validation
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        User u = UserDB.getUser(user.getUserId());
-        if (violations.size() > 0) {
-            ArrayList<String> validationMessages = new ArrayList<>();
-            for (ConstraintViolation<User> violation : violations) {
-                validationMessages.add(violation.getPropertyPath().toString());
-            }
-            return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
-        }
-        if (u != null) {
-            UserDB.updateUser(id, user); // Remove initial user
-            return Response.status(Status.OK).entity("User Updated!").build();
-        } else {
-            return Response.status(Status.NOT_FOUND).entity("Error, User Not Found!").build();
-        }
-    }
+	// Retrieve a user from the database
+	@GET
+	@Path("/{userId}")
+	public Response getById(@PathParam("userId") int id) {
+		User user = UserDB.get(id);
+		if (user != null) {
+			return Response.status(Status.OK).entity("User Retrieved!").build();
+		} else {
+			return Response.status(Status.NOT_FOUND).entity("Error, User Not Found!").build();
+		}
+	}
 
-    // Remove a user from the database 
-    @DELETE
-    @Path("/{userId}")
-    public Response removeUserById(@PathParam("userId") int id) {
-        User user = UserDB.getUser(id);
-        if (user != null) {
-            UserDB.removeUser(id);
-            return Response.status(Status.OK).entity("User Deleted!").build();
-        } else {
-            return Response.status(Status.NOT_FOUND).entity("Error, User Not Found!").build();
-        }
-    }
+	// Create a user and add it to the database
+	@POST
+	public Response create(User user) throws URISyntaxException {
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		User u = UserDB.get(user.getUserId());
+		// Validation check
+		if (violations.size() > 0) {
+			ArrayList<String> validationMessages = new ArrayList<>();
+			for (ConstraintViolation<User> violation : violations) {
+				validationMessages.add(violation.getPropertyPath().toString());
+			}
+			return Response.status(Response.Status.BAD_REQUEST).entity(validationMessages).build();
+		}
+		// Create new user if it doesn't exist
+		if (u == null) {
+			UserDB.update(user.getUserId(), user);
+			return Response.status(Status.OK).entity("User Created!").build();
+		} else {
+			return Response.status(Status.NOT_FOUND).entity("User Already Exists. Please try again.").build();
+		}
+	}
+
+	// Update user
+	@PUT
+	@Path("/{userId}")
+	public Response updateById(@PathParam("userId") int id, User user) {
+		// Validation
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		User u = UserDB.get(user.getUserId());
+		if (violations.size() > 0) {
+			ArrayList<String> validationMessages = new ArrayList<>();
+			for (ConstraintViolation<User> violation : violations) {
+				validationMessages.add(violation.getPropertyPath().toString());
+			}
+			return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
+		}
+		if (u != null) {
+			// Update user
+			UserDB.update(id, user);
+			return Response.status(Status.OK).entity("User Updated!").build();
+		} else {
+			return Response.status(Status.NOT_FOUND).entity("Error, User Not Found!").build();
+		}
+	}
+
+	// Remove a user from the database
+	@DELETE
+	@Path("/{userId}")
+	public Response removeById(@PathParam("userId") int id) {
+		User user = UserDB.get(id);
+		if (user != null) {
+			UserDB.remove(id);
+			return Response.status(Status.OK).entity("User Deleted!").build();
+		} else {
+			return Response.status(Status.NOT_FOUND).entity("Error, User Not Found!").build();
+		}
+	}
 
 	/*
 	 * Returns a list of all users in the database
@@ -98,8 +111,7 @@ public class UserApiResource {
 	@GET
 	public Response getUsers() {
 		// Return users
-        return Response.ok(UserDB.getUsers()).build();
+		return Response.ok(UserDB.getUsers()).build();
 	}
-	
-	
+
 }
