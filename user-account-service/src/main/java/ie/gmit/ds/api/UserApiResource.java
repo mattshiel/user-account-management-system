@@ -1,4 +1,4 @@
-package ie.gmit.ds;
+package ie.gmit.ds.api;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserApiResource {
-
+	
 	private HashMap<Integer, User> usersMap = new HashMap<Integer, User>();
 
 	public UserApiResource() {

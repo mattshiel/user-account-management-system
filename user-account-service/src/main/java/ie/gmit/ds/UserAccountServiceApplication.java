@@ -1,5 +1,7 @@
 package ie.gmit.ds;
 
+import ie.gmit.ds.api.UserApiResource;
+import ie.gmit.ds.health.AccountServiceHealthCheck;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
