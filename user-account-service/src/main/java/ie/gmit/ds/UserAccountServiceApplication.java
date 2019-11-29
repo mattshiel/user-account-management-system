@@ -1,7 +1,7 @@
 package ie.gmit.ds;
 
-import ie.gmit.ds.api.UserApiResource;
 import ie.gmit.ds.health.AccountServiceHealthCheck;
+import ie.gmit.ds.resources.UserApiResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
@@ -13,7 +13,8 @@ public class UserAccountServiceApplication extends Application<UserAccountServic
 	
 	@Override
 	public void run(UserAccountServiceConfiguration configuration, Environment environment) throws Exception {
-        environment.jersey().register(new UserApiResource());
+        environment.jersey().register(new UserApiResource(environment.getValidator()));
+       
         final AccountServiceHealthCheck healthCheck = new AccountServiceHealthCheck();
         environment.healthChecks().register("example", healthCheck);
 	}
