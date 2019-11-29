@@ -1,4 +1,4 @@
-package ie.gmit.ds;
+package ie.gmit.ds.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.protobuf.ByteString;
