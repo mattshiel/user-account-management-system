@@ -11,8 +11,9 @@ public class UserAccountServiceApplication extends Application<UserAccountServic
 	
 	@Override
 	public void run(UserAccountServiceConfiguration configuration, Environment environment) throws Exception {
-		// TODO Auto-generated method stub
-        environment.jersey().register(new UserApiResource(environment.getValidator()));
+        environment.jersey().register(new UserApiResource());
+        final AccountServiceHealthCheck healthCheck = new AccountServiceHealthCheck();
+        environment.healthChecks().register("example", healthCheck);
 	}
 
 }
